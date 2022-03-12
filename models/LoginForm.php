@@ -44,11 +44,16 @@ class LoginForm extends Model
      */
     public function validatePassword($attribute, $params)
     {
-        if (!$this->hasErrors()) {
-            $user = $this->getUser();
+        if (! $this->hasErrors()) {
 
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+            $user = $this->getUser();
+ 
+            if (! $user || ! $user->validatePassword($this->password)) {
+                $this->addError('password', 'Неверное имя пользователя или пароль.');
+            } elseif ($user && $user->status == User::STATUS_BLOCKED) {
+                $this->addError('username', 'Ваш аккаунт заблокирован.');
+            } elseif ($user && $user->status == User::STATUS_WAIT) {
+                $this->addError('username', 'Ваш аккаунт не подтвежден.');
             }
         }
     }
@@ -62,6 +67,7 @@ class LoginForm extends Model
         if ($this->validate()) {
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
         }
+        
         return false;
     }
 
