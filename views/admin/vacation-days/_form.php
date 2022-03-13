@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\jui\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\VacationDays */
@@ -14,7 +15,15 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'user_id')->textInput() ?>
 
-    <?= $form->field($model, 'data_start')->textInput() ?>
+    <?= $form->field($model, 'data_start')->widget(DatePicker::classname(), [       
+        'options' => [
+            'class' => 'form-control' . ($model->hasErrors('data_start') ? ' is-invalid' : ''),
+        ],
+        'language' => 'ru',
+        'dateFormat' => 'dd.M.yyyy',
+
+    ]) ?>
+
 
     <?= $form->field($model, 'data_end')->textInput() ?>
 

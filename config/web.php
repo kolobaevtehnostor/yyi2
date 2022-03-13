@@ -22,6 +22,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
+            'loginUrl' => array('admin/login'),
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -47,6 +48,9 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '/admin/login' => '/admin/base/admin/login',
+                '/admin/signup' => '/admin/base/admin/signup',
+                '/admin' => '/admin/dashboard',
               /* [
                     'class' => 'app\components\AdminUrlRule',
                 ]*/

@@ -12,6 +12,34 @@ use yii\bootstrap4\NavBar;
 
 AppAsset::register($this);
 ?>
+
+<?php
+
+$links = [
+    ['label' => 'Home', 'url' => ['/site/index']],
+    ['label' => 'About', 'url' => ['/site/about']],
+    ['label' => 'Contact', 'url' => ['/site/contact']],
+];
+
+if (Yii::$app->user->isGuest) {
+
+    $links[] = ['label' => 'Login', 'url' => ['/admin/login']];
+    $links[] = ['label' => 'Signup', 'url' => ['/admin/signup']];
+} else {
+    $links[] = '<li>'
+    . Html::beginForm(['/admin/logout'], 'post', ['class' => 'form-inline'])
+    . Html::submitButton(
+        'Logout (' . Yii::$app->user->identity->username . ')',
+        ['class' => 'btn btn-link logout']
+    )
+    . Html::endForm()
+    . '</li>';
+
+}
+
+?>
+
+
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>" class="h-100">
@@ -36,23 +64,7 @@ AppAsset::register($this);
     ]);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post', ['class' => 'form-inline'])
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
+        'items' =>  $links,
     ]);
     NavBar::end();
     ?>

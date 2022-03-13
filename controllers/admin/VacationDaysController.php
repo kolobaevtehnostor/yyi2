@@ -7,11 +7,12 @@ use app\models\VacationDaysSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\controllers\admin\base\AdminController;
 
 /**
  * VacationDaysController implements the CRUD actions for VacationDays model.
  */
-class VacationDaysController extends Controller
+class VacationDaysController extends AdminController
 {
     /**
      * @inheritDoc

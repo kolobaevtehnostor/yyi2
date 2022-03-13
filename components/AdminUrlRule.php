@@ -10,7 +10,7 @@ class AdminUrlRule extends BaseObject implements UrlRuleInterface
 
     public function createUrl($manager, $route, $params)
     {
-        if ($route === 'car/index') {
+        if ($route === 'admin/login') {
             if (isset($params['manufacturer'], $params['model'])) {
                 return $params['manufacturer'] . '/' . $params['model'];
             } elseif (isset($params['manufacturer'])) {

@@ -98,12 +98,22 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    public function getStatusName()
+    /**
+     * Возвращаем имя статуса
+     *
+     * @return string
+     */
+    public function getStatusName(): string
     {
-        return ArrayHelper::getValue(self::getStatusesArray(), $this->status);
+        return (string) ArrayHelper::getValue(self::getStatusesArray(), $this->status);
     }
  
-    public static function getStatusesArray()
+    /**
+     * Получаем массив имен статусов
+     *
+     * @return void
+     */
+    public static function getStatusesArray(): array
     {
         return [
             self::STATUS_BLOCKED => 'Заблокирован',
@@ -112,30 +122,46 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+   /**
+     * @see IdentityInterface
+     */
     public static function findIdentity($id)
     {
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
     }
 
+   /**
+     * @see IdentityInterface
+     */
     public static function findIdentityByAccessToken($token, $type = null)
     {
         throw new NotSupportedException('findIdentityByAccessToken is not implemented.');
     }
-    
+
+    /**
+     * @see IdentityInterface
+     */
     public function getId()
     {
         return $this->getPrimaryKey();
     }
 
+   /**
+     * @see IdentityInterface
+     */
     public function getAuthKey()
     {
         return $this->auth_key;
     }
 
+    /**
+     * @see IdentityInterface
+     */
     public function validateAuthKey($authKey)
     {
         return $this->getAuthKey() === $authKey;
     }
+
     /**
      * Finds user by username
      *
@@ -147,7 +173,13 @@ class User extends ActiveRecord implements IdentityInterface
         return static::findOne(['username' => $username]);
     }
 
-    public function validatePassword($password)
+    /**
+     * Кастомная валидация пароля
+     *
+     * @param string $password
+     * @return void
+     */
+    public function validatePassword(string $password)
     {
         $user = User::findByUsername($this->username);
 
@@ -175,7 +207,12 @@ class User extends ActiveRecord implements IdentityInterface
         $this->auth_key = Yii::$app->security->generateRandomString();
     }
 
-
+    /**
+     * После сохранения
+     *
+     * @param [type] $insert
+     * @return void
+     */
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
@@ -188,5 +225,4 @@ class User extends ActiveRecord implements IdentityInterface
 
         return false;
     }
-    
 }
