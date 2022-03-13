@@ -1,9 +1,10 @@
 <?php
 
-namespace app\modules\user\models;
+namespace app\models;
  
-use yii\base\Model;
 use Yii;
+use yii\base\Model;
+use app\models\User;
  
 /**
  * Signup form
@@ -32,7 +33,7 @@ class SignupForm extends Model
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
  
-            ['verifyCode', 'captcha', 'captchaAction' => '/user/default/captcha'],
+            //['verifyCode', 'captcha', 'captchaAction' => '/user/default/captcha'],
         ];
     }
  
@@ -50,14 +51,9 @@ class SignupForm extends Model
             $user->setPassword($this->password);
             $user->status = User::STATUS_WAIT;
             $user->generateAuthKey();
-            $user->generateEmailConfirmToken();
  
             if ($user->save()) {
-                Yii::$app->mailer->compose('@app/modules/user/mails/emailConfirm', ['user' => $user])
-                    ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name])
-                    ->setTo($this->email)
-                    ->setSubject('Email confirmation for ' . Yii::$app->name)
-                    ->send();
+             
                 return $user;
             }
         }

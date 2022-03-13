@@ -1,9 +1,11 @@
 <?php
 
 namespace app\models;
-namespace \yii\db\ActiveRecord;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "user".
@@ -39,11 +41,13 @@ class User extends ActiveRecord implements IdentityInterface
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
-            'attributes' => [
-                ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
-                ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
-            ],
+            [
+                'class' => TimestampBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+            ]
         ];
     }
 
@@ -147,12 +151,12 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $user = User::findByUsername($this->username);
 
-        if (! $user || Yii::$app->security->validatePassword($password, $this->password_hash)) {
+        if ($user && Yii::$app->security->validatePassword($password, $this->password_hash)) {
           
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -171,7 +175,7 @@ class User extends ActiveRecord implements IdentityInterface
         $this->auth_key = Yii::$app->security->generateRandomString();
     }
 
-    
+
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
